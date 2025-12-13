@@ -3,7 +3,6 @@ import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { useControls } from "leva";
 import { PostProcessingPass } from "./components/PostProcessingPass";
-import Panda from "./models/Panda";
 import MovingObjects from "./models/Moving_Objects";
 import SceneOne from "./models/SceneOne";
 import SceneTwo from "./models/SceneTwo";
