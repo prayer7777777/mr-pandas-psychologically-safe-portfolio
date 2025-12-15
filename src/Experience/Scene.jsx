@@ -25,7 +25,7 @@ const PROGRESS_RESET_AMOUNT = 1 / SEGMENTS_COUNT;
 const WORLD_FORWARD_TRIGGER = 0.9;
 const WORLD_BACK_TRIGGER = 0.85;
 
-const SINGLE_FORWARD_TRIGGER = 0.6;
+const SINGLE_FORWARD_TRIGGER = 0.5;
 const SINGLE_BACK_TRIGGER = 0.35;
 
 const transitionCurvePoints = [
@@ -59,6 +59,10 @@ const Scene = ({
   const singleSheetRef = useRef();
 
   const shiftWorld = (direction = "forward") => {
+    if (!sceneGroupRef.current) {
+      return;
+    }
+
     const offset =
       direction === "forward"
         ? SHIFT_X_AMOUNT * loopCounter.current
@@ -68,6 +72,10 @@ const Scene = ({
   };
 
   const shiftSingleSheet = (direction = "forward") => {
+    if (!singleSheetRef.current) {
+      return;
+    }
+
     const offset =
       direction === "forward"
         ? SHIFT_X_AMOUNT * loopCounter.current
@@ -95,8 +103,6 @@ const Scene = ({
   };
 
   const shiftCurvePoints = (direction = "forward") => {
-    console.log(loopCounter.current);
-
     let shiftedCameraPoints = [];
     if (direction === "forward") {
       shiftedCameraPoints = initialCurvePointsRef.current.map((point) =>
@@ -105,22 +111,18 @@ const Scene = ({
           .add(new THREE.Vector3(SHIFT_X_AMOUNT * loopCounter.current, 0, 0))
       );
     } else {
+      // console.log(SHIFT_X_AMOUNT);
+      // console.log(loopCounter.current);
+      // console.log(SHIFT_X_AMOUNT * (loopCounter.current - 1));
+      // console.log(initialCurvePointsRef.current);
       shiftedCameraPoints = initialCurvePointsRef.current.map((point) =>
         point
           .clone()
-          .sub(
-            new THREE.Vector3(
-              SHIFT_X_AMOUNT * Math.abs(loopCounter.current - 1),
-              0,
-              0
-            )
+          .add(
+            new THREE.Vector3(SHIFT_X_AMOUNT * (loopCounter.current - 1), 0, 0)
           )
       );
-      console.log(SHIFT_X_AMOUNT);
-      console.log(loopCounter.current - 1);
-      console.log(
-        new THREE.Vector3(SHIFT_X_AMOUNT * (loopCounter.current - 1), 0, 0)
-      );
+
       console.log(shiftedCameraPoints);
     }
 
@@ -222,7 +224,7 @@ const Scene = ({
     }
 
     if (
-      newProgress > SINGLE_FORWARD_TRIGGER &&
+      newProgress >= SINGLE_FORWARD_TRIGGER &&
       !transitionCurveActive.current
     ) {
       shiftSingleSheet("forward");
