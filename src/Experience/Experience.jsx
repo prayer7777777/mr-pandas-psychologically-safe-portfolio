@@ -15,8 +15,8 @@ import { LinearSRGBColorSpace, NoToneMapping } from "three/webgpu";
 const Experience = () => {
   const camera = useRef();
   const cameraGroup = useRef();
-  const scrollProgress = useRef(0);
-  const targetScrollProgress = useRef(0);
+  const scrollProgress = useRef(0.95);
+  const targetScrollProgress = useRef(0.95);
   const scrollSpeed = 0.0085;
   const lerpFactor = 0.1;
   const isSwiping = useRef(false);
