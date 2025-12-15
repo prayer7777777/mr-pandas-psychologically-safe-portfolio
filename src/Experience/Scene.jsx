@@ -21,7 +21,12 @@ import { transition } from "three/examples/jsm/tsl/display/TransitionNode.js";
 const POINTS_COUNT = initialCameraPoints.length;
 const SEGMENTS_COUNT = POINTS_COUNT - 1;
 const PROGRESS_RESET_AMOUNT = 1 / SEGMENTS_COUNT;
-const SHIFT_TRIGGER = 1 - 2 * PROGRESS_RESET_AMOUNT;
+
+const WORLD_FORWARD_TRIGGER = 0.9;
+const WORLD_BACK_TRIGGER = 0.85;
+
+const SINGLE_FORWARD_TRIGGER = 0.6;
+const SINGLE_BACK_TRIGGER = 0.35;
 
 const transitionCurvePoints = [
   new THREE.Vector3(0, 0, 0),
@@ -36,6 +41,7 @@ const Scene = ({
   lerpFactor,
   mousePositionOffset,
   mouseRotationOffset,
+  scrollSpeedMultiplier,
 }) => {
   const curveRef = useRef(initialCameraCurve);
   const curvePointsRef = useRef([...initialCameraPoints]);
@@ -49,33 +55,39 @@ const Scene = ({
   const transitionCurvePointsRef = useRef(transitionCurvePoints);
   const transitionCurveActive = useRef(false);
 
-  const initiateTransitionCurve = (direction = "forward") => {
-    console.log("transition intiated");
-    console.log(loopCounter.current);
-    if (direction === "forward") {
-      transitionCurvePointsRef.current = [
-        initialCurvePointsRef.current[initialCurvePointsRef.current.length - 1]
-          .clone()
-          .add(
-            new THREE.Vector3(SHIFT_X_AMOUNT * (loopCounter.current - 1), 0, 0)
-          ),
+  const sceneGroupRef = useRef();
+  const singleSheetRef = useRef();
 
-        initialCurvePointsRef.current[0]
-          .clone()
-          .add(new THREE.Vector3(SHIFT_X_AMOUNT * loopCounter.current, 0, 0)),
-      ];
-    } else {
-      transitionCurvePointsRef.current = [
-        initialCurvePointsRef.current[initialCurvePointsRef.current.length - 1]
-          .clone()
-          .sub(
-            new THREE.Vector3(SHIFT_X_AMOUNT * (loopCounter.current + 1), 0, 0)
-          ),
-        initialCurvePointsRef.current[0].clone(),
-      ];
-    }
+  const shiftWorld = (direction = "forward") => {
+    const offset =
+      direction === "forward"
+        ? SHIFT_X_AMOUNT * loopCounter.current
+        : SHIFT_X_AMOUNT * (loopCounter.current - 1);
 
-    console.log(transitionCurvePointsRef.current);
+    sceneGroupRef.current.position.x = offset;
+  };
+
+  const shiftSingleSheet = (direction = "forward") => {
+    const offset =
+      direction === "forward"
+        ? SHIFT_X_AMOUNT * loopCounter.current
+        : SHIFT_X_AMOUNT * (loopCounter.current - 1);
+
+    singleSheetRef.current.position.x = offset;
+  };
+
+  const initiateTransitionCurve = () => {
+    const targetLoopIndex = loopCounter.current;
+
+    transitionCurvePointsRef.current = [
+      initialCurvePointsRef.current[initialCurvePointsRef.current.length - 1]
+        .clone()
+        .add(new THREE.Vector3(SHIFT_X_AMOUNT * (targetLoopIndex - 1), 0, 0)),
+
+      initialCurvePointsRef.current[0]
+        .clone()
+        .add(new THREE.Vector3(SHIFT_X_AMOUNT * targetLoopIndex, 0, 0)),
+    ];
 
     curvePointsRef.current = transitionCurvePointsRef.current;
     curveRef.current.points = transitionCurvePointsRef.current;
@@ -83,7 +95,6 @@ const Scene = ({
   };
 
   const shiftCurvePoints = (direction = "forward") => {
-    console.log("shifting intiated");
     console.log(loopCounter.current);
 
     let shiftedCameraPoints = [];
@@ -98,12 +109,20 @@ const Scene = ({
         point
           .clone()
           .sub(
-            new THREE.Vector3(SHIFT_X_AMOUNT * (loopCounter.current - 1), 0, 0)
+            new THREE.Vector3(
+              SHIFT_X_AMOUNT * Math.abs(loopCounter.current - 1),
+              0,
+              0
+            )
           )
       );
+      console.log(SHIFT_X_AMOUNT);
+      console.log(loopCounter.current - 1);
+      console.log(
+        new THREE.Vector3(SHIFT_X_AMOUNT * (loopCounter.current - 1), 0, 0)
+      );
+      console.log(shiftedCameraPoints);
     }
-
-    console.log(shiftedCameraPoints);
 
     curvePointsRef.current = shiftedCameraPoints;
     curveRef.current.points = shiftedCameraPoints;
@@ -144,6 +163,8 @@ const Scene = ({
   };
 
   useFrame(() => {
+    scrollSpeedMultiplier.current = transitionCurveActive.current ? 4 : 1;
+
     let newProgress = THREE.MathUtils.lerp(
       scrollProgress.current,
       targetScrollProgress.current,
@@ -157,7 +178,7 @@ const Scene = ({
         loopCounter.current++;
       } else {
         transitionCurveActive.current = true;
-        initiateTransitionCurve("forward");
+        initiateTransitionCurve();
       }
 
       scrollProgress.current -= 1;
@@ -175,7 +196,7 @@ const Scene = ({
       } else {
         loopCounter.current--;
         transitionCurveActive.current = true;
-        initiateTransitionCurve("backward");
+        initiateTransitionCurve();
       }
 
       scrollProgress.current += 1;
@@ -189,6 +210,27 @@ const Scene = ({
     }
 
     scrollProgress.current = newProgress;
+
+    // console.log(scrollProgress.current);
+
+    if (newProgress > WORLD_FORWARD_TRIGGER && !transitionCurveActive.current) {
+      shiftWorld("forward");
+    }
+
+    if (newProgress <= WORLD_BACK_TRIGGER && !transitionCurveActive.current) {
+      shiftWorld("backward");
+    }
+
+    if (
+      newProgress > SINGLE_FORWARD_TRIGGER &&
+      !transitionCurveActive.current
+    ) {
+      shiftSingleSheet("forward");
+    }
+
+    if (newProgress <= SINGLE_BACK_TRIGGER && !transitionCurveActive.current) {
+      shiftSingleSheet("backward");
+    }
 
     const basePoint = curveRef.current.getPoint(newProgress);
 
@@ -240,17 +282,18 @@ const Scene = ({
   });
   return (
     <>
-      {/* <ambientLight intensity={1} /> */}
-      {/* <directionalLight position={[3.3, 1.0, 4.4]} castShadow intensity={4} /> */}
-
       <Suspense fallback={null}>
-        <MovingObjects />
-        <SceneOne />
-        <SceneTwo />
-        <SceneThree />
-        <SceneFour />
+        <group ref={sceneGroupRef}>
+          <MovingObjects />
+          <SceneOne />
+          <SceneTwo />
+          <SceneThree />
+          <SceneFour />
+        </group>
         {/* <PostProcessingPass /> */}
-        <SingleSheet />
+        <group ref={singleSheetRef}>
+          <SingleSheet />
+        </group>
       </Suspense>
     </>
   );

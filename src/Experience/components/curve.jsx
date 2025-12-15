@@ -5,7 +5,7 @@ const heightYValueAdjustment = 2;
 
 const LAST_X = 36.005978;
 const FIRST_X = -20.202141;
-export const SHIFT_X_AMOUNT = LAST_X - FIRST_X + 30;
+export const SHIFT_X_AMOUNT = LAST_X - FIRST_X + 6.62;
 
 export const initialCameraPoints = [
   // Scene 1

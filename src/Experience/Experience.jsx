@@ -15,9 +15,10 @@ import { LinearSRGBColorSpace, NoToneMapping } from "three/webgpu";
 const Experience = () => {
   const camera = useRef();
   const cameraGroup = useRef();
-  const scrollProgress = useRef(0.95);
-  const targetScrollProgress = useRef(0.95);
-  const scrollSpeed = 0.0085;
+  const scrollProgress = useRef(0);
+  const targetScrollProgress = useRef(0);
+  const baseScrollSpeed = 0.0085;
+  const scrollSpeedMultiplier = useRef(1);
   const lerpFactor = 0.1;
   const isSwiping = useRef(false);
   const mousePositionOffset = useRef(new THREE.Vector3());
@@ -29,7 +30,8 @@ const Experience = () => {
 
       targetScrollProgress.current +=
         Math.sign(normalized.pixelY) *
-        scrollSpeed *
+        baseScrollSpeed *
+        scrollSpeedMultiplier.current *
         Math.min(Math.abs(normalized.pixelY) / 100, 1);
     };
 
@@ -127,6 +129,7 @@ const Experience = () => {
         lerpFactor={lerpFactor}
         mousePositionOffset={mousePositionOffset}
         mouseRotationOffset={mouseRotationOffset}
+        scrollSpeedMultiplier={scrollSpeedMultiplier}
       />
 
       <group ref={cameraGroup}>
