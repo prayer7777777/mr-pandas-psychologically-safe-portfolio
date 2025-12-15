@@ -17,7 +17,7 @@ const Experience = () => {
   const cameraGroup = useRef();
   const scrollProgress = useRef(0);
   const targetScrollProgress = useRef(0);
-  const scrollSpeed = 0.005;
+  const scrollSpeed = 0.0085;
   const lerpFactor = 0.1;
   const isSwiping = useRef(false);
   const mousePositionOffset = useRef(new THREE.Vector3());
@@ -129,17 +129,15 @@ const Experience = () => {
         mouseRotationOffset={mouseRotationOffset}
       />
 
-      {/* <group ref={cameraGroup}> */}
-      <PerspectiveCamera
-        ref={camera}
-        makeDefault
-        fov={35}
-        // position={[0, 0, 30]}
-      />
-      <OrbitControls enableZoom={false} enableRotate={false} />
-
-      {/* <OrbitControls /> */}
-      {/* </group> */}
+      <group ref={cameraGroup}>
+        <PerspectiveCamera
+          ref={camera}
+          makeDefault
+          fov={35}
+          // position={[0, 0, 30]}
+        />
+        {/* <OrbitControls enableZoom={false} enableRotate={false} /> */}
+      </group>
     </Canvas>
   );
 };

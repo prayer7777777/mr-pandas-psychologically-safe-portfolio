@@ -5,6 +5,8 @@ import { useKTX2Texture } from "../utils/ktxLoader";
 export default function Model(props) {
   const { nodes, materials } = useGLTF("/models/scene_3.glb");
 
+  const pandaCorp = useRef();
+
   const scene_3 = useKTX2Texture("/textures/scene_3.ktx2");
 
   return (
@@ -46,6 +48,7 @@ export default function Model(props) {
         rotation={[Math.PI / 2, 0.023, 0]}
       />
       <mesh
+        ref={pandaCorp}
         geometry={nodes.Plane113.geometry}
         material={scene_3}
         position={[8.363, 3.436, -2.754]}

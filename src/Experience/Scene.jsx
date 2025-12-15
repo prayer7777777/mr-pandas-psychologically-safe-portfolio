@@ -73,66 +73,68 @@ const Scene = ({
 
     const basePoint = cameraCurve.getPoint(newProgress);
 
-    // cameraGroup.current.position.x = THREE.MathUtils.lerp(
-    //   cameraGroup.current.position.x,
-    //   basePoint.x,
-    //   0.1
-    // );
-    // cameraGroup.current.position.y = THREE.MathUtils.lerp(
-    //   cameraGroup.current.position.y,
-    //   basePoint.y,
-    //   0.1
-    // );
-    // cameraGroup.current.position.z = THREE.MathUtils.lerp(
-    //   cameraGroup.current.position.z,
-    //   basePoint.z,
-    //   0.1
-    // );
+    console.log(camera.current.rotation);
+    console.log(newProgress);
 
-    console.log(basePoint);
-    console.log(camera.current.position.x);
-
-    camera.current.position.x = THREE.MathUtils.lerp(
-      camera.current.position.x,
-      basePoint.x,
-      0.1
-    );
-    camera.current.position.y = THREE.MathUtils.lerp(
-      camera.current.position.y,
-      basePoint.y,
-      0.1
-    );
-    camera.current.position.z = THREE.MathUtils.lerp(
-      camera.current.position.z,
-      basePoint.z,
-      0.1
-    );
+    //For testing
     // camera.current.position.x = THREE.MathUtils.lerp(
     //   camera.current.position.x,
-    //   mousePositionOffset.current.x,
+    //   basePoint.x,
     //   0.1
     // );
     // camera.current.position.y = THREE.MathUtils.lerp(
     //   camera.current.position.y,
-    //   -mousePositionOffset.current.y,
+    //   basePoint.y,
     //   0.1
     // );
-    // camera.current.position.z = 0;
+    // camera.current.position.z = THREE.MathUtils.lerp(
+    //   camera.current.position.z,
+    //   basePoint.z,
+    //   0.1
+    // );
 
-    // const targetRotation = getLerpedRotation(newProgress);
-    // rotationBufferQuat.slerp(targetRotation, 0.05);
-    // cameraGroup.current.quaternion.copy(rotationBufferQuat);
+    cameraGroup.current.position.x = THREE.MathUtils.lerp(
+      cameraGroup.current.position.x,
+      basePoint.x,
+      0.1
+    );
+    cameraGroup.current.position.y = THREE.MathUtils.lerp(
+      cameraGroup.current.position.y,
+      basePoint.y,
+      0.1
+    );
+    cameraGroup.current.position.z = THREE.MathUtils.lerp(
+      cameraGroup.current.position.z,
+      basePoint.z,
+      0.1
+    );
 
-    // camera.current.rotation.x = THREE.MathUtils.lerp(
-    //   camera.current.rotation.x,
-    //   -mouseRotationOffset.current.x,
-    //   0.1
-    // );
-    // camera.current.rotation.y = THREE.MathUtils.lerp(
-    //   camera.current.rotation.y,
-    //   -mouseRotationOffset.current.y,
-    //   0.1
-    // );
+    camera.current.position.x = THREE.MathUtils.lerp(
+      camera.current.position.x,
+      mousePositionOffset.current.x,
+      0.1
+    );
+    camera.current.position.y = THREE.MathUtils.lerp(
+      camera.current.position.y,
+      -mousePositionOffset.current.y,
+      0.1
+    );
+    camera.current.position.z = 0;
+
+    const targetRotation = getLerpedRotation(newProgress);
+    rotationBufferQuat.slerp(targetRotation, 0.05);
+    cameraGroup.current.quaternion.copy(rotationBufferQuat);
+
+    camera.current.rotation.x = THREE.MathUtils.lerp(
+      camera.current.rotation.x,
+      -mouseRotationOffset.current.x,
+      0.1
+    );
+    camera.current.rotation.y = THREE.MathUtils.lerp(
+      camera.current.rotation.y,
+      -mouseRotationOffset.current.y,
+      0.1
+    );
   });
   return (
     <>
