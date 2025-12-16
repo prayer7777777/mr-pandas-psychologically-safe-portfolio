@@ -111,10 +111,6 @@ const Scene = ({
           .add(new THREE.Vector3(SHIFT_X_AMOUNT * loopCounter.current, 0, 0))
       );
     } else {
-      // console.log(SHIFT_X_AMOUNT);
-      // console.log(loopCounter.current);
-      // console.log(SHIFT_X_AMOUNT * (loopCounter.current - 1));
-      // console.log(initialCurvePointsRef.current);
       shiftedCameraPoints = initialCurvePointsRef.current.map((point) =>
         point
           .clone()
@@ -122,8 +118,6 @@ const Scene = ({
             new THREE.Vector3(SHIFT_X_AMOUNT * (loopCounter.current - 1), 0, 0)
           )
       );
-
-      console.log(shiftedCameraPoints);
     }
 
     curvePointsRef.current = shiftedCameraPoints;
@@ -187,8 +181,6 @@ const Scene = ({
   };
 
   useFrame(() => {
-    scrollSpeedMultiplier.current = transitionCurveActive.current ? 4 : 1;
-
     let newProgress = THREE.MathUtils.lerp(
       scrollProgress.current,
       targetScrollProgress.current,
@@ -208,11 +200,6 @@ const Scene = ({
       scrollProgress.current -= 1;
       targetScrollProgress.current -= 1;
       newProgress -= 1;
-      newProgress = THREE.MathUtils.lerp(
-        scrollProgress.current,
-        targetScrollProgress.current,
-        lerpFactor
-      );
     } else if (newProgress < 0) {
       if (transitionCurveActive.current) {
         transitionCurveActive.current = false;
@@ -226,14 +213,16 @@ const Scene = ({
       scrollProgress.current += 1;
       targetScrollProgress.current += 1;
       newProgress += 1;
-      newProgress = THREE.MathUtils.lerp(
-        scrollProgress.current,
-        targetScrollProgress.current,
-        lerpFactor
-      );
     }
 
     scrollProgress.current = newProgress;
+
+    if (transitionCurveActive.current) {
+      console.log(scrollSpeedMultiplier.current);
+      scrollSpeedMultiplier.current = newProgress <= 0.95 ? 6 : 1;
+    } else {
+      scrollSpeedMultiplier.current = 1;
+    }
 
     // console.log(scrollProgress.current);
 
@@ -259,7 +248,7 @@ const Scene = ({
     const basePoint = curveRef.current.getPoint(newProgress);
 
     // console.log(camera.current.rotation);
-    // console.log(newProgress);
+    console.log(newProgress);
 
     cameraGroup.current.position.x = THREE.MathUtils.lerp(
       cameraGroup.current.position.x,
