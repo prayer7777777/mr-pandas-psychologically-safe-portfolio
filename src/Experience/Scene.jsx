@@ -136,26 +136,48 @@ const Scene = ({
   );
 
   const getLerpedRotation = (progress) => {
-    for (let i = 0; i < rotationTargets.length - 1; i++) {
-      const start = rotationTargets[i];
-      const end = rotationTargets[i + 1];
-      if (progress >= start.progress && progress <= end.progress) {
-        const lerpFactor =
-          (progress - start.progress) / (end.progress - start.progress);
+    if (transitionCurveActive.current) {
+      const lerpFactor = (progress - 0) / (1 - 0);
 
-        const startQuaternion = new THREE.Quaternion().setFromEuler(
-          start.rotation
-        );
-        const endQuaternion = new THREE.Quaternion().setFromEuler(end.rotation);
+      const startQuaternion = new THREE.Quaternion().setFromEuler(
+        rotationTargets[rotationTargets.length - 1].rotation
+      );
+      const endQuaternion = new THREE.Quaternion().setFromEuler(
+        rotationTargets[0].rotation
+      );
 
-        const lerpingQuaternion = new THREE.Quaternion();
-        lerpingQuaternion.slerpQuaternions(
-          startQuaternion,
-          endQuaternion,
-          lerpFactor
-        );
+      const lerpingQuaternion = new THREE.Quaternion();
+      lerpingQuaternion.slerpQuaternions(
+        startQuaternion,
+        endQuaternion,
+        lerpFactor
+      );
 
-        return lerpingQuaternion;
+      return lerpingQuaternion;
+    } else {
+      for (let i = 0; i < rotationTargets.length - 1; i++) {
+        const start = rotationTargets[i];
+        const end = rotationTargets[i + 1];
+        if (progress >= start.progress && progress <= end.progress) {
+          const lerpFactor =
+            (progress - start.progress) / (end.progress - start.progress);
+
+          const startQuaternion = new THREE.Quaternion().setFromEuler(
+            start.rotation
+          );
+          const endQuaternion = new THREE.Quaternion().setFromEuler(
+            end.rotation
+          );
+
+          const lerpingQuaternion = new THREE.Quaternion();
+          lerpingQuaternion.slerpQuaternions(
+            startQuaternion,
+            endQuaternion,
+            lerpFactor
+          );
+
+          return lerpingQuaternion;
+        }
       }
     }
 
