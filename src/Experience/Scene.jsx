@@ -218,7 +218,6 @@ const Scene = ({
     scrollProgress.current = newProgress;
 
     if (transitionCurveActive.current) {
-      console.log(scrollSpeedMultiplier.current);
       scrollSpeedMultiplier.current = newProgress <= 0.95 ? 6 : 1;
     } else {
       scrollSpeedMultiplier.current = 1;
@@ -248,7 +247,7 @@ const Scene = ({
     const basePoint = curveRef.current.getPoint(newProgress);
 
     // console.log(camera.current.rotation);
-    console.log(newProgress);
+    // console.log(newProgress);
 
     cameraGroup.current.position.x = THREE.MathUtils.lerp(
       cameraGroup.current.position.x,

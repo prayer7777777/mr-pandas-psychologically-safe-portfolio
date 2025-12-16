@@ -18,12 +18,12 @@ const Experience = () => {
   const scrollProgress = useRef(0);
   const targetScrollProgress = useRef(0);
   const baseScrollSpeed = 0.0085;
-  // const baseScrollSpeed = 0.02;
   const scrollSpeedMultiplier = useRef(1);
   const lerpFactor = 0.1;
   const isSwiping = useRef(false);
   const mousePositionOffset = useRef(new THREE.Vector3());
   const mouseRotationOffset = useRef(new THREE.Euler());
+  const lastTouchY = useRef(null);
 
   useEffect(() => {
     const handleWheel = (e) => {
@@ -65,7 +65,10 @@ const Experience = () => {
         const deltaY = e.touches[0].clientY - lastTouchY.current;
         const touchMultiplier = 0.3;
         targetScrollProgress.current +=
-          Math.sign(deltaY) * scrollSpeed * touchMultiplier;
+          Math.sign(deltaY) *
+          baseScrollSpeed *
+          touchMultiplier *
+          scrollSpeedMultiplier.current;
       }
       lastTouchY.current = e.touches[0].clientY;
     };
