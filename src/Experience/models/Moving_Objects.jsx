@@ -90,13 +90,6 @@ export default function Model(props) {
         rotation={[Math.PI / 2, -0.029, 0]}
       />
       <mesh
-        geometry={nodes.Mr_Panda.geometry}
-        material={material}
-        position={[-20.662, -4.833, -1.454]}
-        rotation={[Math.PI, 0, Math.PI]}
-        scale={[1.523, 1, 1.523]}
-      />
-      <mesh
         geometry={nodes.Skeleton_Stick.geometry}
         material={material}
         position={[15.013, 1.303, -1.48]}

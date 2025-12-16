@@ -130,3 +130,58 @@ export const rotationTargets = [
     ),
   },
 ];
+
+// Extra curves
+
+const PANDA_LAST_X = 36.005978;
+const PANDA_FIRST_X = -20.650911;
+export const PANDA_SHIFT_X_AMOUNT = PANDA_LAST_X - PANDA_FIRST_X + 6.62;
+const pandaCurveHeightAdjustment = -5.5;
+
+export const initialPandaPoints = [
+  new THREE.Vector3(
+    -20.650911,
+    0.590827 + pandaCurveHeightAdjustment,
+    -1.341367
+  ),
+  new THREE.Vector3(
+    -15.177652,
+    0.590827 + pandaCurveHeightAdjustment,
+    -1.398876
+  ),
+  new THREE.Vector3(
+    -9.425609,
+    0.590827 + pandaCurveHeightAdjustment,
+    -1.341367
+  ),
+  new THREE.Vector3(
+    -3.599831,
+    0.461949 + pandaCurveHeightAdjustment,
+    -1.398876
+  ),
+  new THREE.Vector3(1.926874, 1.49733 + pandaCurveHeightAdjustment, -1.341367),
+  new THREE.Vector3(7.588829, 2.235309 + pandaCurveHeightAdjustment, -1.387374),
+  new THREE.Vector3(
+    14.657124,
+    2.174377 + pandaCurveHeightAdjustment,
+    -1.398991
+  ),
+  new THREE.Vector3(
+    21.697693,
+    2.423718 + pandaCurveHeightAdjustment,
+    -1.416137
+  ),
+  new THREE.Vector3(24.653442, 3.91255 + pandaCurveHeightAdjustment, -1.473646),
+  new THREE.Vector3(
+    31.030914,
+    4.092358 + pandaCurveHeightAdjustment + 1,
+    -1.473646
+  ),
+  new THREE.Vector3(
+    36.005978,
+    4.092358 + pandaCurveHeightAdjustment + 1,
+    -1.473646
+  ),
+];
+
+export const pandaCurve = new THREE.CatmullRomCurve3(initialPandaPoints);

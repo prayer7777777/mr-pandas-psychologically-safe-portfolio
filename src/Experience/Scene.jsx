@@ -1,3 +1,4 @@
+// Scene.js - Updated version
 import { React, Suspense, useState, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
@@ -9,29 +10,19 @@ import SceneTwo from "./models/SceneTwo";
 import SceneThree from "./models/SceneThree";
 import SceneFour from "./models/SceneFour";
 import SingleSheet from "./models/SingleSheet";
-import { SoftShadows } from "@react-three/drei";
+import Panda from "./models/Panda";
 import {
   cameraCurve as initialCameraCurve,
   initialCameraPoints,
   SHIFT_X_AMOUNT,
   rotationTargets,
 } from "./components/curve";
-import { transition } from "three/examples/jsm/tsl/display/TransitionNode.js";
-
-const POINTS_COUNT = initialCameraPoints.length;
-const SEGMENTS_COUNT = POINTS_COUNT - 1;
-const PROGRESS_RESET_AMOUNT = 1 / SEGMENTS_COUNT;
+import { useScrollCurve } from "./hooks/useScrollCurve";
 
 const WORLD_FORWARD_TRIGGER = 0.9;
 const WORLD_BACK_TRIGGER = 0.88;
-
 const SINGLE_FORWARD_TRIGGER = 0.5;
 const SINGLE_BACK_TRIGGER = 0.35;
-
-const transitionCurvePoints = [
-  new THREE.Vector3(0, 0, 0),
-  new THREE.Vector3(0, 0, 0),
-];
 
 const Scene = ({
   cameraGroup,
@@ -43,86 +34,32 @@ const Scene = ({
   mouseRotationOffset,
   scrollSpeedMultiplier,
 }) => {
-  const curveRef = useRef(initialCameraCurve);
-  const curvePointsRef = useRef([...initialCameraPoints]);
-  const initialCurvePointsRef = useRef(
-    initialCameraPoints.map((v) => v.clone())
+  const cameraScrollCurve = useScrollCurve(
+    initialCameraCurve,
+    initialCameraPoints,
+    SHIFT_X_AMOUNT
   );
-
-  curveRef.current.points = curvePointsRef.current;
-  let loopCounter = useRef(1);
-
-  const transitionCurvePointsRef = useRef(transitionCurvePoints);
-  const transitionCurveActive = useRef(false);
 
   const sceneGroupRef = useRef();
   const singleSheetRef = useRef();
 
+  // Keep your existing shift functions
   const shiftWorld = (direction = "forward") => {
-    if (!sceneGroupRef.current) {
-      return;
-    }
-
+    if (!sceneGroupRef.current) return;
     const offset =
       direction === "forward"
-        ? SHIFT_X_AMOUNT * loopCounter.current
-        : SHIFT_X_AMOUNT * (loopCounter.current - 1);
-
+        ? SHIFT_X_AMOUNT * cameraScrollCurve.loopCounter.current
+        : SHIFT_X_AMOUNT * (cameraScrollCurve.loopCounter.current - 1);
     sceneGroupRef.current.position.x = offset;
   };
 
   const shiftSingleSheet = (direction = "forward") => {
-    if (!singleSheetRef.current) {
-      return;
-    }
-
+    if (!singleSheetRef.current) return;
     const offset =
       direction === "forward"
-        ? SHIFT_X_AMOUNT * loopCounter.current
-        : SHIFT_X_AMOUNT * (loopCounter.current - 1);
-
+        ? SHIFT_X_AMOUNT * cameraScrollCurve.loopCounter.current
+        : SHIFT_X_AMOUNT * (cameraScrollCurve.loopCounter.current - 1);
     singleSheetRef.current.position.x = offset;
-  };
-
-  const initiateTransitionCurve = () => {
-    const targetLoopIndex = loopCounter.current;
-
-    transitionCurvePointsRef.current = [
-      initialCurvePointsRef.current[initialCurvePointsRef.current.length - 1]
-        .clone()
-        .add(new THREE.Vector3(SHIFT_X_AMOUNT * (targetLoopIndex - 1), 0, 0)),
-
-      initialCurvePointsRef.current[0]
-        .clone()
-        .add(new THREE.Vector3(SHIFT_X_AMOUNT * targetLoopIndex, 0, 0)),
-    ];
-
-    curvePointsRef.current = transitionCurvePointsRef.current;
-    curveRef.current.points = transitionCurvePointsRef.current;
-    curveRef.current.needsUpdate = true;
-  };
-
-  const shiftCurvePoints = (direction = "forward") => {
-    let shiftedCameraPoints = [];
-    if (direction === "forward") {
-      shiftedCameraPoints = initialCurvePointsRef.current.map((point) =>
-        point
-          .clone()
-          .add(new THREE.Vector3(SHIFT_X_AMOUNT * loopCounter.current, 0, 0))
-      );
-    } else {
-      shiftedCameraPoints = initialCurvePointsRef.current.map((point) =>
-        point
-          .clone()
-          .add(
-            new THREE.Vector3(SHIFT_X_AMOUNT * (loopCounter.current - 1), 0, 0)
-          )
-      );
-    }
-
-    curvePointsRef.current = shiftedCameraPoints;
-    curveRef.current.points = shiftedCameraPoints;
-    curveRef.current.needsUpdate = true;
   };
 
   const [rotationBufferQuat] = useState(
@@ -130,23 +67,20 @@ const Scene = ({
   );
 
   const getLerpedRotation = (progress) => {
-    if (transitionCurveActive.current) {
+    if (cameraScrollCurve.transitionCurveActive.current) {
       const lerpFactor = (progress - 0) / (1 - 0);
-
       const startQuaternion = new THREE.Quaternion().setFromEuler(
         rotationTargets[rotationTargets.length - 1].rotation
       );
       const endQuaternion = new THREE.Quaternion().setFromEuler(
         rotationTargets[0].rotation
       );
-
       const lerpingQuaternion = new THREE.Quaternion();
       lerpingQuaternion.slerpQuaternions(
         startQuaternion,
         endQuaternion,
         lerpFactor
       );
-
       return lerpingQuaternion;
     } else {
       for (let i = 0; i < rotationTargets.length - 1; i++) {
@@ -155,26 +89,22 @@ const Scene = ({
         if (progress >= start.progress && progress <= end.progress) {
           const lerpFactor =
             (progress - start.progress) / (end.progress - start.progress);
-
           const startQuaternion = new THREE.Quaternion().setFromEuler(
             start.rotation
           );
           const endQuaternion = new THREE.Quaternion().setFromEuler(
             end.rotation
           );
-
           const lerpingQuaternion = new THREE.Quaternion();
           lerpingQuaternion.slerpQuaternions(
             startQuaternion,
             endQuaternion,
             lerpFactor
           );
-
           return lerpingQuaternion;
         }
       }
     }
-
     return new THREE.Quaternion().setFromEuler(
       rotationTargets[rotationTargets.length - 1].rotation
     );
@@ -188,28 +118,26 @@ const Scene = ({
     );
 
     if (newProgress >= 1) {
-      if (transitionCurveActive.current) {
-        transitionCurveActive.current = false;
-        shiftCurvePoints("forward");
-        loopCounter.current++;
+      if (cameraScrollCurve.transitionCurveActive.current) {
+        cameraScrollCurve.transitionCurveActive.current = false;
+        cameraScrollCurve.shiftCurvePoints("forward");
+        cameraScrollCurve.loopCounter.current++;
       } else {
-        transitionCurveActive.current = true;
-        initiateTransitionCurve();
+        cameraScrollCurve.transitionCurveActive.current = true;
+        cameraScrollCurve.initiateTransitionCurve();
       }
-
       scrollProgress.current -= 1;
       targetScrollProgress.current -= 1;
       newProgress -= 1;
     } else if (newProgress < 0) {
-      if (transitionCurveActive.current) {
-        transitionCurveActive.current = false;
-        shiftCurvePoints("backward");
+      if (cameraScrollCurve.transitionCurveActive.current) {
+        cameraScrollCurve.transitionCurveActive.current = false;
+        cameraScrollCurve.shiftCurvePoints("backward");
       } else {
-        loopCounter.current--;
-        transitionCurveActive.current = true;
-        initiateTransitionCurve();
+        cameraScrollCurve.loopCounter.current--;
+        cameraScrollCurve.transitionCurveActive.current = true;
+        cameraScrollCurve.initiateTransitionCurve();
       }
-
       scrollProgress.current += 1;
       targetScrollProgress.current += 1;
       newProgress += 1;
@@ -217,37 +145,40 @@ const Scene = ({
 
     scrollProgress.current = newProgress;
 
-    if (transitionCurveActive.current) {
+    if (cameraScrollCurve.transitionCurveActive.current) {
       scrollSpeedMultiplier.current = newProgress <= 0.95 ? 6 : 1;
     } else {
       scrollSpeedMultiplier.current = 1;
     }
 
-    // console.log(scrollProgress.current);
-
-    if (newProgress > WORLD_FORWARD_TRIGGER && !transitionCurveActive.current) {
+    if (
+      newProgress > WORLD_FORWARD_TRIGGER &&
+      !cameraScrollCurve.transitionCurveActive.current
+    ) {
       shiftWorld("forward");
     }
-
-    if (newProgress <= WORLD_BACK_TRIGGER && !transitionCurveActive.current) {
+    if (
+      newProgress <= WORLD_BACK_TRIGGER &&
+      !cameraScrollCurve.transitionCurveActive.current
+    ) {
       shiftWorld("backward");
     }
-
     if (
       newProgress >= SINGLE_FORWARD_TRIGGER &&
-      !transitionCurveActive.current
+      !cameraScrollCurve.transitionCurveActive.current
     ) {
       shiftSingleSheet("forward");
     }
-
-    if (newProgress <= SINGLE_BACK_TRIGGER && !transitionCurveActive.current) {
+    if (
+      newProgress <= SINGLE_BACK_TRIGGER &&
+      !cameraScrollCurve.transitionCurveActive.current
+    ) {
       shiftSingleSheet("backward");
     }
 
-    const basePoint = curveRef.current.getPoint(newProgress);
+    const basePoint = cameraScrollCurve.getCurrentPoint(newProgress);
 
-    // console.log(camera.current.rotation);
-    // console.log(newProgress);
+    // console.log(basePoint);
 
     cameraGroup.current.position.x = THREE.MathUtils.lerp(
       cameraGroup.current.position.x,
@@ -292,17 +223,22 @@ const Scene = ({
       0.1
     );
   });
+
   return (
     <>
       <Suspense fallback={null}>
         <group ref={sceneGroupRef}>
-          <MovingObjects />
+          <MovingObjects scrollProgress={scrollProgress} />
           <SceneOne />
           <SceneTwo />
           <SceneThree />
           <SceneFour />
         </group>
-        {/* <PostProcessingPass /> */}
+
+        <Panda
+          scrollProgress={scrollProgress}
+          cameraScrollCurve={cameraScrollCurve}
+        />
         <group ref={singleSheetRef}>
           <SingleSheet />
         </group>
