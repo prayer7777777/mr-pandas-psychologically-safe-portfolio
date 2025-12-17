@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useKTX2Texture } from "../utils/ktxLoader";
 import { useFrame } from "@react-three/fiber";
@@ -23,17 +23,109 @@ export default function Model({ scrollProgress, ...props }) {
   const shipGroupRef = useRef();
   const skeletonGroupRef = useRef();
 
-  useFrame(() => {
+  const [randomOffsets] = useState(() => ({
+    camel: {
+      position: new THREE.Vector3(),
+      rotation: new THREE.Euler(),
+      time: 0,
+      basePosition: new THREE.Vector3(0, 0, 0),
+    },
+    bike: {
+      position: new THREE.Vector3(),
+      rotation: new THREE.Euler(),
+      time: Math.PI * 0.3,
+      basePosition: new THREE.Vector3(0, 0.15, 0),
+    },
+    ship: {
+      position: new THREE.Vector3(),
+      rotation: new THREE.Euler(),
+      time: Math.PI * 0.7,
+      basePosition: new THREE.Vector3(0, 0, -0.2),
+    },
+    skeleton: {
+      position: new THREE.Vector3(),
+      rotation: new THREE.Euler(),
+      time: Math.PI * 1.2,
+      basePosition: new THREE.Vector3(0, 0, -0.2),
+    },
+  }));
+
+  useFrame((state, delta) => {
+    randomOffsets.camel.time += delta;
+    randomOffsets.bike.time += delta;
+    randomOffsets.ship.time += delta;
+    randomOffsets.skeleton.time += delta;
+
+    const camelPosAmp = 0.04;
+    const camelRotAmp = 0.015;
+    randomOffsets.camel.position.x =
+      Math.sin(randomOffsets.camel.time * 1.1 + 0.3) * camelPosAmp;
+    randomOffsets.camel.position.y =
+      Math.sin(randomOffsets.camel.time * 1.4 + 1.1) * camelPosAmp * 1.5;
+    randomOffsets.camel.position.z =
+      Math.sin(randomOffsets.camel.time * 0.9 + 2.2) * camelPosAmp * 0.3;
+    randomOffsets.camel.rotation.x =
+      Math.sin(randomOffsets.camel.time * 0.8 + 0.7) * camelRotAmp;
+    randomOffsets.camel.rotation.y =
+      Math.sin(randomOffsets.camel.time * 1.0 + 1.3) * camelRotAmp;
+    randomOffsets.camel.rotation.z =
+      Math.sin(randomOffsets.camel.time * 0.7 + 2.1) * camelRotAmp * 0.5;
+
+    const bikePosAmp = 0.02;
+    const bikeRotAmp = 0.01;
+    randomOffsets.bike.position.x =
+      Math.sin(randomOffsets.bike.time * 2.1 + 0.8) * bikePosAmp;
+    randomOffsets.bike.position.y =
+      Math.sin(randomOffsets.bike.time * 2.3 + 1.5) * bikePosAmp * 0.8;
+    randomOffsets.bike.position.z =
+      Math.sin(randomOffsets.bike.time * 1.8 + 2.7) * bikePosAmp * 0.2;
+    randomOffsets.bike.rotation.x =
+      Math.sin(randomOffsets.bike.time * 1.9 + 0.4) * bikeRotAmp;
+    randomOffsets.bike.rotation.y =
+      Math.sin(randomOffsets.bike.time * 1.7 + 1.8) * bikeRotAmp;
+    randomOffsets.bike.rotation.z =
+      Math.sin(randomOffsets.bike.time * 1.5 + 2.9) * bikeRotAmp * 0.4;
+
+    const shipPosAmp = 0.06;
+    const shipRotAmp = 0.025;
+    randomOffsets.ship.position.x =
+      Math.sin(randomOffsets.ship.time * 0.6 + 1.2) * shipPosAmp * 0.7;
+    randomOffsets.ship.position.y =
+      Math.sin(randomOffsets.ship.time * 0.8 + 0.9) * shipPosAmp;
+    randomOffsets.ship.position.z =
+      Math.sin(randomOffsets.ship.time * 0.5 + 1.8) * shipPosAmp * 0.4;
+    randomOffsets.ship.rotation.x =
+      Math.sin(randomOffsets.ship.time * 0.7 + 1.1) * shipRotAmp;
+    randomOffsets.ship.rotation.y =
+      Math.sin(randomOffsets.ship.time * 0.4 + 2.3) * shipRotAmp * 0.8;
+    randomOffsets.ship.rotation.z =
+      Math.sin(randomOffsets.ship.time * 0.6 + 0.6) * shipRotAmp;
+
+    const skeletonPosAmp = 0.05;
+    const skeletonRotAmp = 0.02;
+    randomOffsets.skeleton.position.x =
+      Math.sin(randomOffsets.skeleton.time * 0.9 + 2.1) * skeletonPosAmp * 0.8;
+    randomOffsets.skeleton.position.y =
+      Math.sin(randomOffsets.skeleton.time * 1.2 + 0.4) * skeletonPosAmp * 1.2;
+    randomOffsets.skeleton.position.z =
+      Math.sin(randomOffsets.skeleton.time * 0.7 + 1.6) * skeletonPosAmp * 0.3;
+    randomOffsets.skeleton.rotation.x =
+      Math.sin(randomOffsets.skeleton.time * 0.8 + 1.9) * skeletonRotAmp;
+    randomOffsets.skeleton.rotation.y =
+      Math.sin(randomOffsets.skeleton.time * 1.1 + 0.2) * skeletonRotAmp;
+    randomOffsets.skeleton.rotation.z =
+      Math.sin(randomOffsets.skeleton.time * 0.9 + 2.8) * skeletonRotAmp * 0.6;
+
     if (
       scrollProgress.current >= 0 &&
       scrollProgress.current <= 0.3 &&
       bikeGroupRef.current
     ) {
       const normalizedProgress = scrollProgress.current / 0.3;
-
       const targetX = normalizedProgress * 16.89;
-      bikeGroupRef.current.position.x = THREE.MathUtils.lerp(
-        bikeGroupRef.current.position.x,
+
+      randomOffsets.bike.basePosition.x = THREE.MathUtils.lerp(
+        randomOffsets.bike.basePosition.x,
         targetX,
         0.1
       );
@@ -83,8 +175,6 @@ export default function Model({ scrollProgress, ...props }) {
       }
     }
 
-    console.log(scrollProgress);
-
     if (
       scrollProgress.current >= 0.31 &&
       scrollProgress.current <= 0.49 &&
@@ -95,13 +185,14 @@ export default function Model({ scrollProgress, ...props }) {
 
       const targetX = normalizedProgress * 10;
       const targetY = normalizedProgress * 1.5;
-      shipGroupRef.current.position.x = THREE.MathUtils.lerp(
-        shipGroupRef.current.position.x,
+
+      randomOffsets.ship.basePosition.x = THREE.MathUtils.lerp(
+        randomOffsets.ship.basePosition.x,
         targetX,
         0.1
       );
-      shipGroupRef.current.position.y = THREE.MathUtils.lerp(
-        shipGroupRef.current.position.y,
+      randomOffsets.ship.basePosition.y = THREE.MathUtils.lerp(
+        randomOffsets.ship.basePosition.y,
         targetY,
         0.1
       );
@@ -116,8 +207,8 @@ export default function Model({ scrollProgress, ...props }) {
         (scrollProgress.current - 0.508) / (0.6 - 0.508);
 
       const targetX = normalizedProgress * 6.5;
-      camelGroupRef.current.position.x = THREE.MathUtils.lerp(
-        camelGroupRef.current.position.x,
+      randomOffsets.camel.basePosition.x = THREE.MathUtils.lerp(
+        randomOffsets.camel.basePosition.x,
         targetX,
         0.1
       );
@@ -179,11 +270,58 @@ export default function Model({ scrollProgress, ...props }) {
         (scrollProgress.current - 0.609) / (0.69 - 0.609);
 
       const targetX = normalizedProgress * 6.3;
-      skeletonGroupRef.current.position.x = THREE.MathUtils.lerp(
-        skeletonGroupRef.current.position.x,
+      randomOffsets.skeleton.basePosition.x = THREE.MathUtils.lerp(
+        randomOffsets.skeleton.basePosition.x,
         targetX,
         0.1
       );
+    }
+
+    if (camelGroupRef.current) {
+      camelGroupRef.current.position.set(
+        randomOffsets.camel.basePosition.x + randomOffsets.camel.position.x,
+        randomOffsets.camel.basePosition.y + randomOffsets.camel.position.y,
+        randomOffsets.camel.basePosition.z + randomOffsets.camel.position.z
+      );
+      camelGroupRef.current.rotation.x = randomOffsets.camel.rotation.x;
+      camelGroupRef.current.rotation.y = randomOffsets.camel.rotation.y;
+      camelGroupRef.current.rotation.z = randomOffsets.camel.rotation.z;
+    }
+
+    if (bikeGroupRef.current) {
+      bikeGroupRef.current.position.set(
+        randomOffsets.bike.basePosition.x + randomOffsets.bike.position.x,
+        randomOffsets.bike.basePosition.y + randomOffsets.bike.position.y,
+        randomOffsets.bike.basePosition.z + randomOffsets.bike.position.z
+      );
+      bikeGroupRef.current.rotation.x = randomOffsets.bike.rotation.x;
+      bikeGroupRef.current.rotation.y = randomOffsets.bike.rotation.y;
+      bikeGroupRef.current.rotation.z = randomOffsets.bike.rotation.z;
+    }
+
+    if (shipGroupRef.current) {
+      shipGroupRef.current.position.set(
+        randomOffsets.ship.basePosition.x + randomOffsets.ship.position.x,
+        randomOffsets.ship.basePosition.y + randomOffsets.ship.position.y,
+        randomOffsets.ship.basePosition.z + randomOffsets.ship.position.z
+      );
+      shipGroupRef.current.rotation.x = randomOffsets.ship.rotation.x;
+      shipGroupRef.current.rotation.y = randomOffsets.ship.rotation.y;
+      shipGroupRef.current.rotation.z = randomOffsets.ship.rotation.z;
+    }
+
+    if (skeletonGroupRef.current) {
+      skeletonGroupRef.current.position.set(
+        randomOffsets.skeleton.basePosition.x +
+          randomOffsets.skeleton.position.x,
+        randomOffsets.skeleton.basePosition.y +
+          randomOffsets.skeleton.position.y,
+        randomOffsets.skeleton.basePosition.z +
+          randomOffsets.skeleton.position.z
+      );
+      skeletonGroupRef.current.rotation.x = randomOffsets.skeleton.rotation.x;
+      skeletonGroupRef.current.rotation.y = randomOffsets.skeleton.rotation.y;
+      skeletonGroupRef.current.rotation.z = randomOffsets.skeleton.rotation.z;
     }
   });
 
@@ -234,7 +372,7 @@ export default function Model({ scrollProgress, ...props }) {
         />
       </group>
 
-      <group ref={bikeGroupRef} position={[0, 0.15, 0]}>
+      <group ref={bikeGroupRef}>
         <group
           ref={bikePedalHolderRef}
           position={[-20.535, 0.616, -1.381]}
