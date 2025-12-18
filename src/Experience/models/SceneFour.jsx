@@ -12,7 +12,6 @@ export default function Model(props) {
   const firstPaperRef = useRef();
   const secondPaperRef = useRef();
 
-  // Hover states using useRef
   const firstPaperHovered = useRef(false);
   const secondPaperHovered = useRef(false);
 
@@ -47,7 +46,6 @@ export default function Model(props) {
         (targetZ - firstPaperRef.current.position.z) * lerpFactor;
     }
 
-    // Lerp second paper Z position
     if (secondPaperRef.current) {
       const targetZ = secondPaperHovered.current
         ? secondPaperHoverZ
