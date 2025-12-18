@@ -74,17 +74,17 @@ export default function Model(props) {
     }
 
     if (grass1.current) {
-      grass1.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass2.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass3.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass4.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass5.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass6.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass7.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass8.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass9.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass10.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
-      grass11.current.scale.z = 0.2 * Math.sin(t * 3.5) + 1.2;
+      grass1.current.scale.z = 0.1 * Math.sin(t * 2.98) + 0.9;
+      grass2.current.scale.z = 0.1 * Math.sin(t * 3.12) + 0.9;
+      grass3.current.scale.z = 0.1 * Math.sin(t * 2.95) + 0.9;
+      grass4.current.scale.z = 0.1 * Math.sin(t * 3.01) + 0.9;
+      grass5.current.scale.z = 0.1 * Math.sin(t * 3.02) + 0.9;
+      grass6.current.scale.z = 0.1 * Math.sin(t * 3.05) + 0.9;
+      grass7.current.scale.z = 0.1 * Math.sin(t * 2.89) + 0.9;
+      grass8.current.scale.z = 0.1 * Math.sin(t * 2.99) + 0.9;
+      grass9.current.scale.z = 0.1 * Math.sin(t * 3) + 0.9;
+      grass10.current.scale.z = 0.1 * Math.sin(t * 2.9) + 0.9;
+      grass11.current.scale.z = 0.1 * Math.sin(t * 2.998) + 0.9;
     }
 
     if (aboutRef.current) {
