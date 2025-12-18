@@ -1,10 +1,11 @@
 import "./App.scss";
-import React, { useMemo } from "react";
 import Experience from "./Experience/Experience";
+import IntroScreen from "./components/IntroScreen/IntroScreen";
 
 function App() {
   return (
     <>
+      <IntroScreen />
       <Experience />
     </>
   );

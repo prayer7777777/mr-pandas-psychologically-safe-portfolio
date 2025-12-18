@@ -1,0 +1,53 @@
+import React, { useRef, useState } from "react";
+import { useProgress } from "@react-three/drei";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
+import styles from "./IntroScreen.module.scss";
+
+const IntroScreen = () => {
+  const { progress } = useProgress();
+  const [shouldRender, setShouldRender] = useState(true);
+  const introRef = useRef(null);
+
+  useGSAP(() => {
+    if (progress === 100) {
+      const tl = gsap.timeline({
+        onComplete: () => {
+          setShouldRender(false);
+        },
+      });
+
+      tl.to(introRef.current, {
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out",
+        delay: 1.5,
+      });
+    }
+  }, [progress]);
+
+  if (!shouldRender) return null;
+
+  return (
+    <>
+      <div ref={introRef} className={styles.introScreen}>
+        <div className={styles.introScreenContent}>
+          <div>
+            This template loader is so basic, but I'm too lazy to change it.
+            <br /> plz wait until your experience is done loading. thx.
+            <br /> scroll/swipe to navigate!! 😊
+          </div>
+
+          <div className={styles.progressBarContainer}>
+            <div
+              className={styles.progressBar}
+              style={{ width: `${progress}%` }}
+            ></div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default IntroScreen;
