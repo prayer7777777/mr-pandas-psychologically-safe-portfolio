@@ -24,6 +24,9 @@ export default function Model({ scrollProgress, ...props }) {
   const shipGroupRef = useRef();
   const skeletonGroupRef = useRef();
   const planeRef = useRef();
+  const dirtParticleRef = useRef();
+
+  const [prevScrollProgress] = useState(() => ({ value: 0 }));
 
   const [randomOffsets] = useState(() => ({
     camel: {
@@ -179,6 +182,31 @@ export default function Model({ scrollProgress, ...props }) {
           bikePedalTargetRotation,
           0.1
         );
+      }
+
+      // Dirt Particle Stuff
+      const currentBikeX = randomOffsets.bike.basePosition.x;
+      const velocity = Math.abs(targetX - currentBikeX);
+
+      const scrollingBackward =
+        scrollProgress.current < prevScrollProgress.value;
+
+      const targetScale = scrollingBackward ? 0 : Math.min(velocity * 10, 2);
+
+      if (dirtParticleRef.current) {
+        const currentScale = dirtParticleRef.current.scale.x;
+        const newScale = THREE.MathUtils.lerp(currentScale, targetScale, 0.1);
+        dirtParticleRef.current.scale.set(newScale, newScale, newScale);
+      }
+
+      prevScrollProgress.value = scrollProgress.current;
+    }
+
+    if (scrollProgress.current < 0 || scrollProgress.current > 0.3) {
+      if (dirtParticleRef.current) {
+        const currentScale = dirtParticleRef.current.scale.x;
+        const newScale = THREE.MathUtils.lerp(currentScale, 0, 0.1);
+        dirtParticleRef.current.scale.set(newScale, newScale, newScale);
       }
     }
 
@@ -432,9 +460,11 @@ export default function Model({ scrollProgress, ...props }) {
           rotation={[-Math.PI / 2, 0, -Math.PI]}
         />
         <mesh
+          ref={dirtParticleRef}
+          scale={[0, 0, 0]}
           geometry={nodes.dirt_particle.geometry}
           material={dirtMaterial}
-          position={[-21.136, 0.614, -1.38]}
+          position={[-21.136, 0.514, -1.38]}
           rotation={[-Math.PI / 2, 0, -Math.PI]}
         />
       </group>

@@ -100,11 +100,11 @@ export default function Model({ scrollProgress, ...props }) {
     randomOffsets.kpopSign.time += delta;
 
     const rumiPosAmp = 0.03;
-    const rumiRotAmp = 0.01;
+    const rumiRotAmp = 0.15;
     randomOffsets.kpopRumi.position.x =
       Math.sin(randomOffsets.kpopRumi.time * 1.3 + 0.5) * rumiPosAmp * 0.5;
     randomOffsets.kpopRumi.position.y =
-      Math.sin(randomOffsets.kpopRumi.time * 1.6 + 1.2) * rumiPosAmp * 1.2;
+      Math.sin(randomOffsets.kpopRumi.time * 1.6 + 1.2) * rumiPosAmp * 1;
     randomOffsets.kpopRumi.position.z =
       Math.sin(randomOffsets.kpopRumi.time * 1.1 + 2.4) * rumiPosAmp * 0.3;
     randomOffsets.kpopRumi.rotation.x =
@@ -113,11 +113,11 @@ export default function Model({ scrollProgress, ...props }) {
       Math.sin(randomOffsets.kpopRumi.time * 0.8 + 2.2) * rumiRotAmp * 0.2;
 
     const signPosAmp = 0.025;
-    const signRotAmp = 0.008;
+    const signRotAmp = 0.2;
     randomOffsets.kpopSign.position.x =
       Math.sin(randomOffsets.kpopSign.time * 0.7 + 1.1) * signPosAmp * 0.4;
     randomOffsets.kpopSign.position.y =
-      Math.sin(randomOffsets.kpopSign.time * 0.9 + 0.6) * signPosAmp * 0.8;
+      Math.sin(randomOffsets.kpopSign.time * 0.9 + 0.6) * signPosAmp * 0.2;
     randomOffsets.kpopSign.position.z =
       Math.sin(randomOffsets.kpopSign.time * 0.6 + 1.9) * signPosAmp * 0.2;
     randomOffsets.kpopSign.rotation.x =
@@ -134,7 +134,7 @@ export default function Model({ scrollProgress, ...props }) {
         -0.937 +
           randomOffsets.kpopRumi.basePosition.y +
           randomOffsets.kpopRumi.position.y,
-        -2.493 +
+        -2.293 +
           randomOffsets.kpopRumi.basePosition.z +
           randomOffsets.kpopRumi.position.z
       );
