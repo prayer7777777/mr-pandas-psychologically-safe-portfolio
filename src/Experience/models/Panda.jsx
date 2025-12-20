@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useKTX2Texture } from "../utils/ktxLoader";
 import { useScrollCurve } from "../hooks/useScrollCurve";
@@ -12,14 +12,45 @@ import {
 
 export default function Model({ scrollProgress, cameraScrollCurve, ...props }) {
   const { nodes, materials } = useGLTF("/models/Panda.glb");
-  const material = useKTX2Texture("/textures/Moving_extras.ktx2");
+  const regular = useKTX2Texture("/textures/regular.ktx2");
+  const samurai = useKTX2Texture("/textures/samurai.ktx2");
+  const pirate = useKTX2Texture("/textures/pirate.ktx2");
+  const desert = useKTX2Texture("/textures/desert.ktx2");
+  const zombie = useKTX2Texture("/textures/zombie.ktx2");
   const pandaRef = useRef();
+
+  const textureMap = useMemo(
+    () => [
+      { threshold: 0, texture: regular, name: "regular" },
+      { threshold: 0.136, texture: samurai, name: "samurai" },
+      { threshold: 0.306, texture: pirate, name: "pirate" },
+      { threshold: 0.501, texture: desert, name: "desert" },
+      { threshold: 0.603, texture: zombie, name: "zombie" },
+      { threshold: 0.705, texture: regular, name: "regular" },
+    ],
+    [regular, samurai, pirate, desert, zombie]
+  );
+
+  const getCurrentTexture = (progress) => {
+    let currentTexture = textureMap[0];
+
+    for (let i = textureMap.length - 1; i >= 0; i--) {
+      if (progress >= textureMap[i].threshold) {
+        currentTexture = textureMap[i];
+        break;
+      }
+    }
+
+    return currentTexture.texture;
+  };
 
   const [randomOffset] = useState(() => ({
     position: new THREE.Vector3(),
     rotation: new THREE.Euler(),
     time: 0,
   }));
+
+  const currentTextureRef = useRef(regular);
 
   const pandaScrollCurve = useScrollCurve(
     pandaCurve,
@@ -30,6 +61,17 @@ export default function Model({ scrollProgress, cameraScrollCurve, ...props }) {
   useFrame((state, delta) => {
     if (pandaRef.current && scrollProgress && cameraScrollCurve) {
       let currentProgress = scrollProgress.current;
+      when;
+      if (!cameraScrollCurve.transitionCurveActive.current) {
+        const newTexture = getCurrentTexture(currentProgress);
+        if (newTexture !== currentTextureRef.current) {
+          currentTextureRef.current = newTexture;
+          if (pandaRef.current) {
+            pandaRef.current.material = newTexture;
+          }
+        }
+      }
+
       if (
         cameraScrollCurve.transitionCurveActive.current !==
         pandaScrollCurve.transitionCurveActive.current
@@ -64,7 +106,7 @@ export default function Model({ scrollProgress, cameraScrollCurve, ...props }) {
       randomOffset.position.x =
         Math.sin(randomOffset.time * 1.8 + 0.5) * positionAmplitude * 0.3;
       randomOffset.position.y =
-        Math.sin(randomOffset.time * 1.8 + 1.2) * positionAmplitude * 0.3;
+        Math.sin(randomOffset.time * 1.8 + 1.2) * positionAmplitude * 0.3 - 0.4;
       randomOffset.position.z =
         Math.sin(randomOffset.time * 1.1 + 2.1) * positionAmplitude * 0.2;
 
@@ -101,11 +143,11 @@ export default function Model({ scrollProgress, cameraScrollCurve, ...props }) {
     <group {...props} dispose={null}>
       <mesh
         ref={pandaRef}
-        geometry={nodes.Mr_Panda.geometry}
-        material={material}
-        position={[-20.662, -4.833, -1.454]}
+        geometry={nodes.Mr_Panda004.geometry}
+        material={currentTextureRef.current}
+        position={[-20.664, -5.242, -1.466]}
         rotation={[Math.PI, 0, Math.PI]}
-        scale={[1.523, 1, 1.523]}
+        scale={[1, 1, 1]}
       />
     </group>
   );
