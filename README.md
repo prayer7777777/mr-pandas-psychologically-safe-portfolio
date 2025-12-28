@@ -25,3 +25,4 @@ This repo contains code of Mr. Panda's Portfolio for a Codrops!! It's a concept 
 - Try making different scenes and cute paper animations like a campfire.
 - Better loading screen.
 - Text box so the panda says some stuff.
+- Adjust curve for mobile devices.
