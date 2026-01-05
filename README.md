@@ -1,8 +1,8 @@
 # 😊 Mr. Panda's Psychologically Safe Portfolio 🐼
 
-**[Live site](https://www.mr-pandas-psychologically-safe-portfolio.com/)**
+**[Live site](https://www.mr-pandas-psychologically-safe-portfolio.com/)** | **[Article](https://tympanus.net/codrops/2025/12/30/the-increasing-importance-of-psychological-safety-and-self-awareness-for-creative-work/?_thumbnail_id=107253)**
 
-This repo contains code of Mr. Panda's Portfolio for a Codrops!! It's a concept portfolio website created with [Blender](https://www.blender.org/), [Three.js](https://threejs.org/), and [Krita](https://krita.org/en/). Let's fight back against toxicity in the creative industry.
+This repo contains code of Mr. Panda's Portfolio for a Codrops article!! It's a concept portfolio website created with [Blender](https://www.blender.org/), [Three.js](https://threejs.org/), and [Krita](https://krita.org/en/). Let's fight back against toxicity in the creative industry.
 
 ![Page screenshot](public/media/og-image.webp?raw=true "Page What")
 
@@ -17,12 +17,13 @@ This repo contains code of Mr. Panda's Portfolio for a Codrops!! It's a concept 
 
 # Extra info
 
-- Won [FWA of the day](https://thefwa.com/cases/mr-pandas-psychologically-safe-portfolio).
+- Won [FWA of the day!](https://thefwa.com/cases/mr-pandas-psychologically-safe-portfolio).
 
 # Areas of improvement / things to do
 
 - Generate hitboxes for hovered items that way it won't leave the area and flicker back constantly.
 - Add some cool burning paper shader effects.
+- Add a night mode.
 - Use texture atlases/spritesheets for animations.
 - More easter eggs.
 - Try making one that go forwards and diagonal or rotates camera upside down.
