@@ -33,7 +33,7 @@ const IntroScreen = () => {
       <div ref={introRef} className={styles.introScreen}>
         <div className={styles.introScreenContent}>
           <div>
-            <br /> 🐼 scroll/swipe to navigate!! 😊
+            <br /> 🐼 scroll/slowly drag up and down to navigate!! 😊
           </div>
 
           <div className={styles.progressBarContainer}>
