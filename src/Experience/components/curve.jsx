@@ -27,17 +27,17 @@ export const initialCameraPoints = [
   new THREE.Vector3(
     26.066216,
     4.106054 + heightYValueAdjustment,
-    depthZValue + test
+    depthZValue + test,
   ),
   new THREE.Vector3(
     31.030914,
     4.106054 + heightYValueAdjustment,
-    depthZValue + test
+    depthZValue + test,
   ),
   new THREE.Vector3(
     36.005978,
     3.91222 + heightYValueAdjustment,
-    depthZValue + test
+    depthZValue + test,
   ),
 ];
 
@@ -50,7 +50,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.0017043241744864842,
       -0.22064811124855913,
-      -0.0003730122560727475
+      -0.0003730122560727475,
     ),
   },
   {
@@ -58,7 +58,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.06419977307905109,
       -0.08888115648279392,
-      -0.00570642026054557
+      -0.00570642026054557,
     ),
   },
   {
@@ -66,7 +66,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.229101220729035,
       -0.027356265132564273,
-      -0.006378475999996003
+      -0.006378475999996003,
     ),
   },
   {
@@ -74,7 +74,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.21490963788572381,
       0.07946656300948479,
-      0.01732601995022464
+      0.01732601995022464,
     ),
   },
   {
@@ -82,7 +82,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.15971723485809433,
       0.04670528046769929,
-      0.007520846163953575
+      0.007520846163953575,
     ),
   },
   {
@@ -90,7 +90,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.15103232459264546,
       0.00498848150386255,
-      0.0007592001306001002
+      0.0007592001306001002,
     ),
   },
   {
@@ -98,7 +98,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.024867780069863777,
       -0.023369051346196712,
-      -0.0005812032825821626
+      -0.0005812032825821626,
     ),
   },
   {
@@ -106,7 +106,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       0.045197053301981635,
       -0.006583935578690767,
-      0.0002977751186144598
+      0.0002977751186144598,
     ),
   },
   {
@@ -114,7 +114,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.09476188265977611,
       0.12518540275964718,
-      0.011866830817320508
+      0.011866830817320508,
     ),
   },
   //Right after haunted house
@@ -123,7 +123,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.03936093252874196,
       -0.09166906996940853,
-      -0.0036049751059469247
+      -0.0036049751059469247,
     ),
   },
   {
@@ -131,7 +131,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.07474327166814804,
       0.051576095684842276,
-      0.003860429637009773
+      0.003860429637009773,
     ),
   },
   {
@@ -139,7 +139,7 @@ export const rotationTargets = [
     rotation: new THREE.Euler(
       -0.07474327166814804,
       0.051576095684842276,
-      0.003860429637009773
+      0.003860429637009773,
     ),
   },
 ];
@@ -154,45 +154,45 @@ export const initialPandaPoints = [
   new THREE.Vector3(
     -20.50911,
     0.790827 + pandaCurveHeightAdjustment,
-    -1.341367
+    -1.341367,
   ),
   new THREE.Vector3(
     -15.077652,
     0.790827 + pandaCurveHeightAdjustment,
-    -1.398876
+    -1.398876,
   ),
   new THREE.Vector3(
     -9.425609,
     0.790827 + pandaCurveHeightAdjustment,
-    -1.341367
+    -1.341367,
   ),
   new THREE.Vector3(
     -3.599831,
     0.731949 + pandaCurveHeightAdjustment,
-    -1.398876
+    -1.398876,
   ),
   new THREE.Vector3(1.926874, 1.49733 + pandaCurveHeightAdjustment, -1.341367),
   new THREE.Vector3(7.588829, 2.235309 + pandaCurveHeightAdjustment, -1.387374),
   new THREE.Vector3(
     14.657124,
     2.174377 + pandaCurveHeightAdjustment,
-    -1.398991
+    -1.398991,
   ),
   new THREE.Vector3(
     21.697693,
     2.423718 + pandaCurveHeightAdjustment,
-    -1.416137
+    -1.416137,
   ),
   new THREE.Vector3(24.653442, 3.91255 + pandaCurveHeightAdjustment, -1.473646),
   new THREE.Vector3(
     31.030914,
     4.092358 + pandaCurveHeightAdjustment + 1,
-    -1.473646
+    -1.473646,
   ),
   new THREE.Vector3(
     36.005978,
     4.092358 + pandaCurveHeightAdjustment + 1,
-    -1.473646
+    -1.473646,
   ),
 ];
 

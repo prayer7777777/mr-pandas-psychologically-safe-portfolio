@@ -34,7 +34,7 @@ const Scene = ({
   const cameraScrollCurve = useScrollCurve(
     initialCameraCurve,
     initialCameraPoints,
-    SHIFT_X_AMOUNT
+    SHIFT_X_AMOUNT,
   );
 
   const sceneGroupRef = useRef();
@@ -59,23 +59,23 @@ const Scene = ({
   };
 
   const [rotationBufferQuat] = useState(
-    new THREE.Quaternion().setFromEuler(rotationTargets[0].rotation)
+    new THREE.Quaternion().setFromEuler(rotationTargets[0].rotation),
   );
 
   const getLerpedRotation = (progress) => {
     if (cameraScrollCurve.transitionCurveActive.current) {
       const lerpFactor = (progress - 0) / (1 - 0);
       const startQuaternion = new THREE.Quaternion().setFromEuler(
-        rotationTargets[rotationTargets.length - 1].rotation
+        rotationTargets[rotationTargets.length - 1].rotation,
       );
       const endQuaternion = new THREE.Quaternion().setFromEuler(
-        rotationTargets[0].rotation
+        rotationTargets[0].rotation,
       );
       const lerpingQuaternion = new THREE.Quaternion();
       lerpingQuaternion.slerpQuaternions(
         startQuaternion,
         endQuaternion,
-        lerpFactor
+        lerpFactor,
       );
       return lerpingQuaternion;
     } else {
@@ -86,23 +86,23 @@ const Scene = ({
           const lerpFactor =
             (progress - start.progress) / (end.progress - start.progress);
           const startQuaternion = new THREE.Quaternion().setFromEuler(
-            start.rotation
+            start.rotation,
           );
           const endQuaternion = new THREE.Quaternion().setFromEuler(
-            end.rotation
+            end.rotation,
           );
           const lerpingQuaternion = new THREE.Quaternion();
           lerpingQuaternion.slerpQuaternions(
             startQuaternion,
             endQuaternion,
-            lerpFactor
+            lerpFactor,
           );
           return lerpingQuaternion;
         }
       }
     }
     return new THREE.Quaternion().setFromEuler(
-      rotationTargets[rotationTargets.length - 1].rotation
+      rotationTargets[rotationTargets.length - 1].rotation,
     );
   };
 
@@ -110,7 +110,7 @@ const Scene = ({
     let newProgress = THREE.MathUtils.lerp(
       scrollProgress.current,
       targetScrollProgress.current,
-      lerpFactor
+      lerpFactor,
     );
 
     if (newProgress >= 1) {
@@ -179,28 +179,28 @@ const Scene = ({
     cameraGroup.current.position.x = THREE.MathUtils.lerp(
       cameraGroup.current.position.x,
       basePoint.x,
-      0.1
+      0.1,
     );
     cameraGroup.current.position.y = THREE.MathUtils.lerp(
       cameraGroup.current.position.y,
       basePoint.y,
-      0.1
+      0.1,
     );
     cameraGroup.current.position.z = THREE.MathUtils.lerp(
       cameraGroup.current.position.z,
       basePoint.z,
-      0.1
+      0.1,
     );
 
     camera.current.position.x = THREE.MathUtils.lerp(
       camera.current.position.x,
       mousePositionOffset.current.x,
-      0.1
+      0.1,
     );
     camera.current.position.y = THREE.MathUtils.lerp(
       camera.current.position.y,
       -mousePositionOffset.current.y,
-      0.1
+      0.1,
     );
     camera.current.position.z = 0;
 
@@ -211,12 +211,12 @@ const Scene = ({
     camera.current.rotation.x = THREE.MathUtils.lerp(
       camera.current.rotation.x,
       -mouseRotationOffset.current.x,
-      0.1
+      0.1,
     );
     camera.current.rotation.y = THREE.MathUtils.lerp(
       camera.current.rotation.y,
       -mouseRotationOffset.current.y,
-      0.1
+      0.1,
     );
   });
 
